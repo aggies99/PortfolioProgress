@@ -6,13 +6,11 @@ Ext.define('CustomApp', {
         MyApp = this;
         
         MyApp.filterOptions = [
-            'MY14',                                        '- MY14 LPB', '- MY14 SOP', '- MY14 HX SOP',
-            'MY15',                           '- MY15 DB', '- MY15 LPB', '- MY15 SOP',
-            'MY16',              '- MY16 FB', '- MY16 DB', '- MY16 LPB', '- MY16 SOP',
-            'MY17', '- MY17 MB', '- MY17 FB', '- MY17 DB', '- MY17 LPB', '- MY17 SOP'
+            'Filter 1',
+            'Filter 2'
             ];
         
-        //MyApp.filter = 'MY15 LPB';  // Comment line to enable combo box
+        //MyApp.filter = 'Filter 1';  // Comment line to enable combo box
         
         MyApp._drawComboBox();
         
