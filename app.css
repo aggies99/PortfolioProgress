@@ -1,3 +1,19 @@
 .app {
      /* Add app styles here */
 }
+
+.lefty {
+    float: left;
+    width: 50%;
+    min-height: 600px;
+}
+
+.inner {
+    padding: 10px;
+}
+
+.righty {
+    float: left;
+    width: 50%;
+    min-height: 600px;
+}
