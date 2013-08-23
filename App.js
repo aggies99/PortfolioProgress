@@ -5,6 +5,13 @@ Ext.define('CustomApp', {
     launch: function() {
         MyApp = this;
         
+        MyApp.filterOptions = [
+            'MY14',                                        '- MY14 LPB', '- MY14 SOP', '- MY14 HX SOP',
+            'MY15',                           '- MY15 DB', '- MY15 LPB', '- MY15 SOP',
+            'MY16',              '- MY16 FB', '- MY16 DB', '- MY16 LPB', '- MY16 SOP',
+            'MY17', '- MY17 MB', '- MY17 FB', '- MY17 DB', '- MY17 LPB', '- MY17 SOP'
+            ];
+        
         //MyApp.filter = 'MY15 LPB';  // Comment line to enable combo box
         
         MyApp._drawComboBox();
@@ -27,7 +34,7 @@ Ext.define('CustomApp', {
         }
         else {
             // This draws our default program data
-            MyApp.combo.setValue(MyApp.filter);            
+            MyApp.combo.setValue(MyApp.filterOptions[0]);            
         }
     },
     
@@ -44,12 +51,14 @@ Ext.define('CustomApp', {
     _drawComboBox: function() {
         MyApp.combo = Ext.create('Ext.form.ComboBox', {
             fieldLabel: 'Program',
-            store: ['MY14', 'MY15', 'MY16', 'MY17'],
+            store: MyApp.filterOptions,
             listeners: {
                 'change': function(combo, newVal) {
-                    MyApp.filter = newVal;
-                    console.log(MyApp.filter);
+                    var start = 0;
+                    if (newVal.charAt(0) === '-' ) start = 2;
                     
+                    MyApp.filter = newVal.substr(start);
+                
                     MyApp._loadMilestoneStatus();
                 }
             }
@@ -82,7 +91,7 @@ Ext.define('CustomApp', {
             ],
 
             sorters: {
-                property: 'PlannedStartDate',
+                property: 'Rank',
                 direction: 'ASC'
             },
             
@@ -109,7 +118,7 @@ Ext.define('CustomApp', {
                 'PlannedEndDate',
                 {dataIndex: 'AcceptedLeafStoryPlanEstimateTotal', width: 60, text:'Accepted Points'},
                 {dataIndex: 'LeafStoryPlanEstimateTotal', width: 60, text:'Total Points'},
-                'PercentDoneByStoryPlanEstimate',
+                'PercentDoneByStoryPlanEstimate'
             ],
             showPagingToolbar: false            
         });
@@ -174,7 +183,7 @@ Ext.define('CustomApp', {
                 {dataIndex: 'Name', width: 300, text:'Milestone'},
                 {dataIndex: 'AcceptedLeafStoryPlanEstimateTotal', width: 60, text:'Accepted Points'},
                 {dataIndex: 'LeafStoryPlanEstimateTotal', width: 60, text:'Total Points'},
-                'PercentDoneByStoryPlanEstimate',
+                'PercentDoneByStoryPlanEstimate'
             ],
             showPagingToolbar: false            
         });
@@ -242,7 +251,7 @@ Ext.define('CustomApp', {
                 'PreliminaryEstimate',
                 {dataIndex: 'AcceptedLeafStoryPlanEstimateTotal', width: 60, text:'Accepted Points'},
                 {dataIndex: 'LeafStoryPlanEstimateTotal', width: 60, text:'Total Points'},
-                'PercentDoneByStoryPlanEstimate',
+                'PercentDoneByStoryPlanEstimate'
             ],
             showPagingToolbar: false            
         });
