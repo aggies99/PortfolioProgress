@@ -4,7 +4,8 @@ Ext.define('CustomApp', {
 
     launch: function() {
         MyApp = this;
-        // MyApp.filter = 'MY14';
+        
+        //MyApp.filter = 'MY15 LPB';  // Comment line to enable combo box
         
         MyApp._drawComboBox();
         
@@ -18,11 +19,11 @@ Ext.define('CustomApp', {
         });
         MyApp.add(MyApp._wrapComponent(MyApp.rightPane, 'righty'));
         
+        // If we have a filter set, then we don't need a combo box for this app
         if( MyApp.filter ){
             MyApp.remove(MyApp.combo);
             
             MyApp._loadMilestoneStatus();
-            MyApp._loadSubsystemStatus();
         }
         else {
             // This draws our default program data
@@ -45,16 +46,11 @@ Ext.define('CustomApp', {
             fieldLabel: 'Program',
             store: ['MY14', 'MY15', 'MY16', 'MY17'],
             listeners: {
-                /*'select': function(combo, records) {
-                    filter = records[0].get('field1');
-                    console.log(filter);
-                },*/
                 'change': function(combo, newVal) {
                     MyApp.filter = newVal;
                     console.log(MyApp.filter);
                     
                     MyApp._loadMilestoneStatus();
-                    MyApp._loadSubsystemStatus();
                 }
             }
         });
@@ -100,23 +96,28 @@ Ext.define('CustomApp', {
         if( MyApp.milestoneGrid ) {
             MyApp.leftPane.remove(MyApp.milestoneGrid);
         }
-                
+
+        //Rally.sdk.util.DateTime.fromIsoString(dateString, true), 'yyyy-MM-dd');
+
         MyApp.milestoneGrid = Ext.create('Rally.ui.grid.Grid', {
             store: myStore,
             title: 'Milestone Status',
             columnCfgs: [
                 'FormattedID',
-                'Name',
+                {dataIndex: 'Name', width: 300, text:'Milestone'},
                 'PlannedStartDate',
                 'PlannedEndDate',
-                'AcceptedLeafStoryPlanEstimateTotal',
-                'LeafStoryPlanEstimateTotal',
-                'PercentDoneByStoryPlanEstimate'
+                {dataIndex: 'AcceptedLeafStoryPlanEstimateTotal', width: 60, text:'Accepted Points'},
+                {dataIndex: 'LeafStoryPlanEstimateTotal', width: 60, text:'Total Points'},
+                'PercentDoneByStoryPlanEstimate',
             ],
             showPagingToolbar: false            
         });
 
         MyApp.leftPane.add(MyApp.milestoneGrid);
+        
+        // Load the subsystem after milestones
+        MyApp._loadSubsystemStatus();
     },
     
     _loadSubsystemStatus: function() {    
@@ -126,10 +127,9 @@ Ext.define('CustomApp', {
         model: 'PortfolioItem/MMF',
         
         fetch: ['Parent',
+                'Project',
                 'FormattedID',
                 'Name',
-                'PlannedStartDate',
-                'PlannedEndDate',
                 'AcceptedLeafStoryPlanEstimateTotal',
                 'LeafStoryPlanEstimateTotal',
                 'PercentDoneByStoryPlanEstimate'
@@ -140,6 +140,11 @@ Ext.define('CustomApp', {
                     property: 'Parent.Name',
                     operator: 'Contains',
                     value: MyApp.filter
+                },
+                {
+                    property: 'PercentDoneByStoryPlanEstimate',
+                    operator: '<',
+                    value: 1
                 }
             ],
 
@@ -156,7 +161,7 @@ Ext.define('CustomApp', {
     
     _drawSubsystemGrid: function(myStore) {
         if( MyApp.subsystemGrid ) {
-            MyApp.rightPane.remove(MyApp.subsystemGrid);
+            MyApp.leftPane.remove(MyApp.subsystemGrid);
         }
         
         MyApp.subsystemGrid = Ext.create('Rally.ui.grid.Grid', {
@@ -164,18 +169,84 @@ Ext.define('CustomApp', {
             title: 'Subsystem Status',
             columnCfgs: [
                 'Parent',
+                'Project',
                 'FormattedID',
-                'Name',
-                'PlannedStartDate',
-                'PlannedEndDate',
-                'AcceptedLeafStoryPlanEstimateTotal',
-                'LeafStoryPlanEstimateTotal',
-                'PercentDoneByStoryPlanEstimate'
+                {dataIndex: 'Name', width: 300, text:'Milestone'},
+                {dataIndex: 'AcceptedLeafStoryPlanEstimateTotal', width: 60, text:'Accepted Points'},
+                {dataIndex: 'LeafStoryPlanEstimateTotal', width: 60, text:'Total Points'},
+                'PercentDoneByStoryPlanEstimate',
             ],
             showPagingToolbar: false            
         });
         
-        MyApp.rightPane.add(MyApp.subsystemGrid);
-    }
+        MyApp.leftPane.add(MyApp.subsystemGrid);
 
+        
+        // Load the features after subsystem
+        MyApp._loadFeatureStatus();
+    },
+
+    _loadFeatureStatus: function() {    
+        var thisIsMyStore = Ext.create('Rally.data.WsapiDataStore', {
+        autoLoad: true,
+            
+        model: 'PortfolioItem/Feature',
+        
+        fetch: ['Parent',
+                'Project',
+                'FormattedID',
+                'Name',
+                'PreliminaryEstimate',
+                'AcceptedLeafStoryPlanEstimateTotal',
+                'LeafStoryPlanEstimateTotal',
+                'PercentDoneByStoryPlanEstimate'
+                ],
+            
+        filters: [
+                {
+                    property: 'Parent.Parent..Name',
+                    operator: 'Contains',
+                    value: MyApp.filter
+                },
+                {
+                    property: 'PercentDoneByStoryPlanEstimate',
+                    operator: '<',
+                    value: 1
+                }
+            ],
+
+            sorters: {
+                property: 'Rank',
+                direction: 'ASC'
+            },
+            
+            listeners: {
+                load: MyApp._drawFeatureGrid
+            }
+        });
+    },
+    
+    _drawFeatureGrid: function(myStore) {
+        if( MyApp.featureGrid ) {
+            MyApp.rightPane.remove(MyApp.featureGrid);
+        }
+        
+        MyApp.featureGrid = Ext.create('Rally.ui.grid.Grid', {
+            store: myStore,
+            title: 'Feature Status',
+            columnCfgs: [
+                'Parent',
+                'Project',
+                'FormattedID',
+                {dataIndex: 'Name', width: 300, text:'Milestone'},
+                'PreliminaryEstimate',
+                {dataIndex: 'AcceptedLeafStoryPlanEstimateTotal', width: 60, text:'Accepted Points'},
+                {dataIndex: 'LeafStoryPlanEstimateTotal', width: 60, text:'Total Points'},
+                'PercentDoneByStoryPlanEstimate',
+            ],
+            showPagingToolbar: false            
+        });
+        
+        MyApp.rightPane.add(MyApp.featureGrid);
+    }
 });
