@@ -5,6 +5,8 @@ Ext.define('CustomApp', {
     launch: function() {
         MyApp = this;
         
+        MyApp.globalContext = this.getContext().getDataContext();
+        
         MyApp.filterOptions = [
             'Filter 1',
             'Filter 2'
@@ -71,6 +73,8 @@ Ext.define('CustomApp', {
             
         model: 'PortfolioItem/Epic',
         
+        context: MyApp.globalContext,
+        
         fetch: ['FormattedID',
                 'Name',
                 'PlannedStartDate',
@@ -132,6 +136,8 @@ Ext.define('CustomApp', {
         autoLoad: true,
             
         model: 'PortfolioItem/MMF',
+        
+        context: MyApp.globalContext,
         
         fetch: ['Parent',
                 'Project',
@@ -198,6 +204,8 @@ Ext.define('CustomApp', {
         autoLoad: true,
             
         model: 'PortfolioItem/Feature',
+        
+        context: MyApp.globalContext,
         
         fetch: ['Parent',
                 'Project',
