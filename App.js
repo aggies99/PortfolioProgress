@@ -7,12 +7,13 @@ Ext.define('CustomApp', {
         
         MyApp.globalContext = this.getContext().getDataContext();
         
-        MyApp.filterOptions = [
-            'Filter 1',
-            'Filter 2'
-            ];
-        
-        //MyApp.filter = 'Filter 1';  // Comment line to enable combo box
+        if (typeof globalFilter != 'undefined') {
+            MyApp.filterOptions = globalFilter;
+        }
+        else {
+            MyApp.filterOptions = [ 'Not set' ];
+        }
+        if (typeof singleFilter != 'undefined') MyApp.filter = singleFilter;
         
         MyApp._drawComboBox();
         
@@ -179,7 +180,7 @@ Ext.define('CustomApp', {
         
         MyApp.subsystemGrid = Ext.create('Rally.ui.grid.Grid', {
             store: myStore,
-            title: 'Subsystem Status',
+            title: 'Subsystem Status (Not complete only)',
             columnCfgs: [
                 'Parent',
                 'Project',
@@ -248,7 +249,7 @@ Ext.define('CustomApp', {
         
         MyApp.featureGrid = Ext.create('Rally.ui.grid.Grid', {
             store: myStore,
-            title: 'Feature Status',
+            title: 'Feature Status (Not complete only)',
             columnCfgs: [
                 'Parent',
                 'Project',
