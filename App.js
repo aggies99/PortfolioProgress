@@ -154,11 +154,11 @@ Ext.define('CustomApp', {
                     property: 'Parent.Name',
                     operator: 'Contains',
                     value: MyApp.filter
-                },
-                {
-                    property: 'PercentDoneByStoryPlanEstimate',
-                    operator: '<',
-                    value: 1
+                // },
+                // {
+                //     property: 'PercentDoneByStoryPlanEstimate',
+                //     operator: '<',
+                //     value: 1
                 }
             ],
 
@@ -197,7 +197,7 @@ Ext.define('CustomApp', {
 
         
         // Load the features after subsystem
-        MyApp._loadFeatureStatus();
+        //MyApp._loadFeatureStatus();
     },
 
     _loadFeatureStatus: function() {    
