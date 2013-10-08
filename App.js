@@ -116,7 +116,7 @@ Ext.define('CustomApp', {
             title: 'Milestone Status',
             columnCfgs: [
                 'FormattedID',
-                {dataIndex: 'Name', width: 300, text:'Milestone'},
+                {dataIndex: 'Name', width: 300, text:'Release'},
                 'PlannedStartDate',
                 'PlannedEndDate',
                 {dataIndex: 'AcceptedLeafStoryPlanEstimateTotal', width: 60, text:'Accepted Points'},
@@ -185,7 +185,7 @@ Ext.define('CustomApp', {
                 'Parent',
                 'Project',
                 'FormattedID',
-                {dataIndex: 'Name', width: 300, text:'Milestone'},
+                {dataIndex: 'Name', width: 300, text:'Scope'},
                 {dataIndex: 'AcceptedLeafStoryPlanEstimateTotal', width: 60, text:'Accepted Points'},
                 {dataIndex: 'LeafStoryPlanEstimateTotal', width: 60, text:'Total Points'},
                 'PercentDoneByStoryPlanEstimate'
@@ -254,7 +254,7 @@ Ext.define('CustomApp', {
                 'Parent',
                 'Project',
                 'FormattedID',
-                {dataIndex: 'Name', width: 300, text:'Milestone'},
+                {dataIndex: 'Name', width: 300, text:'Feature'},
                 'PreliminaryEstimate',
                 {dataIndex: 'AcceptedLeafStoryPlanEstimateTotal', width: 60, text:'Accepted Points'},
                 {dataIndex: 'LeafStoryPlanEstimateTotal', width: 60, text:'Total Points'},
