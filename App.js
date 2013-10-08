@@ -113,7 +113,7 @@ Ext.define('CustomApp', {
 
         MyApp.milestoneGrid = Ext.create('Rally.ui.grid.Grid', {
             store: myStore,
-            title: 'Milestone Status',
+            title: 'Release Status',
             columnCfgs: [
                 'FormattedID',
                 {dataIndex: 'Name', width: 300, text:'Release'},
@@ -180,7 +180,7 @@ Ext.define('CustomApp', {
         
         MyApp.subsystemGrid = Ext.create('Rally.ui.grid.Grid', {
             store: myStore,
-            title: 'Subsystem Status (Not complete only)',
+            title: 'Scope Status (Not complete only)',
             columnCfgs: [
                 'Parent',
                 'Project',
